@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title><%= title %> - CSE 340 Service Network</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/organizations">Organizations</a></li>
-            <li><a href="/projects">Projects</a></li>
-        </ul>
-    </nav>
+    <header>
+        <nav>
+            <a href="/" class="logo">CSE 340<span>Network</span></a>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+            <ul id="navMenu">
+                <li><a href="/" class="<%= title === 'Home' ? 'active' : '' %>">Home</a></li>
+                <li><a href="/organizations" class="<%= title === 'Our Partner Organizations' ? 'active' : '' %>">Organizations</a></li>
+                <li><a href="/projects" class="<%= title === 'Service Projects' ? 'active' : '' %>">Projects</a></li>
+                <li><a href="/categories" class="<%= title === 'Service Categories' ? 'active' : '' %>">Categories</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>

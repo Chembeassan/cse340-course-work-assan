@@ -1,0 +1,56 @@
+<%- include('partials/header') %>
+
+<div class="container">
+    <div class="page-header">
+        <h1><%= title %></h1>
+        <p>Discover meaningful ways to make a difference in your community</p>
+    </div>
+
+    <div class="categories-grid">
+        <div class="category-card category-environmental">
+            <span class="category-icon">🌿</span>
+            <h2>Environmental</h2>
+            <p>Projects focused on protecting and preserving our environment for future generations.</p>
+            <div class="category-stats">
+                <span>🌱 12 Active Projects</span>
+                <span>👥 45 Volunteers</span>
+            </div>
+            <a href="/projects?category=environmental" class="category-link">View Projects →</a>
+        </div>
+        
+        <div class="category-card category-educational">
+            <span class="category-icon">📚</span>
+            <h2>Educational</h2>
+            <p>Projects that support learning, mentoring, and education in our community.</p>
+            <div class="category-stats">
+                <span>📖 8 Active Projects</span>
+                <span>👥 32 Volunteers</span>
+            </div>
+            <a href="/projects?category=educational" class="category-link">View Projects →</a>
+        </div>
+        
+        <div class="category-card category-community">
+            <span class="category-icon">🤝</span>
+            <h2>Community Service</h2>
+            <p>Projects that strengthen and support our local community through collective action.</p>
+            <div class="category-stats">
+                <span>🏠 15 Active Projects</span>
+                <span>👥 67 Volunteers</span>
+            </div>
+            <a href="/projects?category=community" class="category-link">View Projects →</a>
+        </div>
+        
+        <div class="category-card category-wellness">
+            <span class="category-icon">❤️</span>
+            <h2>Health and Wellness</h2>
+            <p>Projects focused on improving health, well-being, and quality of life.</p>
+            <div class="category-stats">
+                <span>💪 6 Active Projects</span>
+                <span>👥 28 Volunteers</span>
+            </div>
+            <a href="/projects?category=wellness" class="category-link">View Projects →</a>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
