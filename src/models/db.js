@@ -1,3 +1,4 @@
+// src/models/db.js
 import { Pool } from 'pg';
 
 /**
@@ -24,6 +25,7 @@ const pool = new Pool({
     connectionTimeoutMillis: 10000,
     idleTimeoutMillis: 30000
 });
+
 /**
  * Since we will modify the normal pool object in development mode, we need to create and
  * export a reference to the pool object. This allows us to use the same name for the
@@ -68,6 +70,11 @@ if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING ===
     db = pool;
 }
 
+// Create a query function that can be imported directly
+const query = async (text, params) => {
+    return db.query(text, params);
+};
+
 /**
  * Tests the database connection by executing a simple query.
  */
@@ -82,4 +89,5 @@ const testConnection = async() => {
     }
 };
 
-export { db as default, testConnection };
+// Export both the default and named exports
+export { db as default, testConnection, query };

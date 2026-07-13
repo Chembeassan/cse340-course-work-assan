@@ -5,6 +5,7 @@ import path from 'path';
 import { testConnection } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
 import { getAllProjects } from './src/models/projects.js';
+import { getAllCategoriesWithCounts } from './src/models/category.js';
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -32,6 +33,18 @@ app.get('/', async (req, res) => {
     res.render('home', { title });
 });
 
+app.get('/categories', async (req, res) => {
+    try {
+        const categories = await getAllCategoriesWithCounts();
+        console.log('Categories loaded:', categories.length);
+        const title = 'Service Categories';
+        res.render('categories', { title, categories });
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).send('Error loading categories');
+    }
+});
+
 app.get('/organizations', async (req, res) => {
     const organizations = await getAllOrganizations();
     const title = 'Our Partner Organizations';
@@ -51,10 +64,6 @@ app.get('/projects', async (req, res) => {
     }
 });
 
-app.get('/categories', async (req, res) => {
-    const title = 'Service Categories';
-    res.render('categories', { title });
-});
 
 app.listen(PORT, async () => {
   try {

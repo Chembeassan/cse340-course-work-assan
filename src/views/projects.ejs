@@ -16,6 +16,13 @@
                         }) %></p>
                         <p><strong>Location:</strong> <%= project.location || 'TBD' %></p>
                         <p><%= project.description %></p>
+                        
+                        <!-- Display categories if available -->
+                        <% if (project.categories && project.categories.length > 0) { %>
+                            <p><strong>Categories:</strong> 
+                                <%= project.categories.join(', ') %>
+                            </p>
+                        <% } %>
                     </div>
                 <% }); %>
             <% } else { %>
@@ -23,5 +30,4 @@
             <% } %>
         </div>
     </main>
-
 <%- include('partials/footer') %>

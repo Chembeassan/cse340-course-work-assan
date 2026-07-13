@@ -7,49 +7,42 @@
     </div>
 
     <div class="categories-grid">
-        <div class="category-card category-environmental">
-            <span class="category-icon">🌿</span>
-            <h2>Environmental</h2>
-            <p>Projects focused on protecting and preserving our environment for future generations.</p>
-            <div class="category-stats">
-                <span>🌱 12 Active Projects</span>
-                <span>👥 45 Volunteers</span>
-            </div>
-            <a href="/projects?category=environmental" class="category-link">View Projects →</a>
-        </div>
-        
-        <div class="category-card category-educational">
-            <span class="category-icon">📚</span>
-            <h2>Educational</h2>
-            <p>Projects that support learning, mentoring, and education in our community.</p>
-            <div class="category-stats">
-                <span>📖 8 Active Projects</span>
-                <span>👥 32 Volunteers</span>
-            </div>
-            <a href="/projects?category=educational" class="category-link">View Projects →</a>
-        </div>
-        
-        <div class="category-card category-community">
-            <span class="category-icon">🤝</span>
-            <h2>Community Service</h2>
-            <p>Projects that strengthen and support our local community through collective action.</p>
-            <div class="category-stats">
-                <span>🏠 15 Active Projects</span>
-                <span>👥 67 Volunteers</span>
-            </div>
-            <a href="/projects?category=community" class="category-link">View Projects →</a>
-        </div>
-        
-        <div class="category-card category-wellness">
-            <span class="category-icon">❤️</span>
-            <h2>Health and Wellness</h2>
-            <p>Projects focused on improving health, well-being, and quality of life.</p>
-            <div class="category-stats">
-                <span>💪 6 Active Projects</span>
-                <span>👥 28 Volunteers</span>
-            </div>
-            <a href="/projects?category=wellness" class="category-link">View Projects →</a>
-        </div>
+        <% if (categories && categories.length > 0) { %>
+            <% categories.forEach((category, index) => { %>
+                <!-- Dynamic category card -->
+                <div class="category-card category-<%= category.name.toLowerCase().replace(/ /g, '-') %>">
+                    <span class="category-icon">
+                        <!-- You can add logic for icons based on category name -->
+                        <% if (category.name.toLowerCase().includes('environment')) { %>
+                            🌿
+                        <% } else if (category.name.toLowerCase().includes('education')) { %>
+                            📚
+                        <% } else if (category.name.toLowerCase().includes('community')) { %>
+                            🤝
+                        <% } else if (category.name.toLowerCase().includes('health') || category.name.toLowerCase().includes('wellness')) { %>
+                            ❤️
+                        <% } else if (category.name.toLowerCase().includes('youth')) { %>
+                            🌟
+                        <% } else if (category.name.toLowerCase().includes('technology')) { %>
+                            💻
+                        <% } else if (category.name.toLowerCase().includes('food')) { %>
+                            🍎
+                        <% } else { %>
+                            🌟
+                        <% } %>
+                    </span>
+                    <h2><%= category.name %></h2>
+                    <p><%= category.description || 'No description available' %></p>
+                    <div class="category-stats">
+                        <span>📋 ID: <%= category.category_id %></span>
+                        <!-- You can add project count here if you query it -->
+                    </div>
+                    <a href="/projects?category=<%= category.category_id %>" class="category-link">View Projects →</a>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p class="no-categories">No categories available. Please add some categories.</p>
+        <% } %>
     </div>
 </div>
 
