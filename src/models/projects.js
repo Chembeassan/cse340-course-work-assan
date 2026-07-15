@@ -28,7 +28,7 @@ const getAllProjects = async() => {
  * @param {number} organizationId - The organization ID
  * @returns {Promise<Array>} Array of project objects
  */
-const getProjectsByOrganization = async(organizationId) => {
+const getProjectsByOrganizationId = async(organizationId) => {
     const query = `
         SELECT 
             p.project_id,
@@ -73,4 +73,53 @@ const getProjectById = async(projectId) => {
     return result.rows[0];
 };
 
-export { getAllProjects, getProjectsByOrganization, getProjectById };
+// Get upcoming projects (limit to specified number)
+const getUpcomingProjects = async(numberOfProjects) => {
+    const query = `
+        SELECT 
+            p.project_id,
+            p.title,
+            p.description,
+            p.location,
+            p.project_date,
+            p.organization_id,
+            o.name as organization_name
+        FROM public.project p
+        JOIN public.organization o ON p.organization_id = o.organization_id
+        WHERE p.project_date >= CURRENT_DATE
+        ORDER BY p.project_date ASC
+        LIMIT $1;
+    `;
+
+    const result = await db.query(query, [numberOfProjects]);
+    return result.rows;
+};
+
+// Get project details by ID
+const getProjectDetails = async(projectId) => {
+    const query = `
+        SELECT 
+            p.project_id,
+            p.title,
+            p.description,
+            p.location,
+            p.project_date,
+            p.organization_id,
+            o.name as organization_name
+        FROM public.project p
+        JOIN public.organization o ON p.organization_id = o.organization_id
+        WHERE p.project_id = $1;
+    `;
+
+    const result = await db.query(query, [projectId]);
+    return result.rows[0];
+};
+
+// Export the model functions
+export { 
+    getAllProjects, 
+    getProjectsByOrganizationId, 
+    getProjectById,
+    getUpcomingProjects,
+    getProjectDetails
+};

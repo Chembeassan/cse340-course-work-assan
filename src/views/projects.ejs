@@ -1,33 +1,38 @@
 <%- include('partials/header') %>
-    <main>
-        <h1><%= title %></h1>
-        <h2>Upcoming Service Projects</h2>
-        
-        <div class="projects-grid">
-            <% if (projects && projects.length > 0) { %>
+
+<main>
+    <h1><%= title %></h1>
+    
+    <div class="projects-grid">
+        <% if (projects && projects.length > 0) { %>
+            <ul>
                 <% projects.forEach(project => { %>
-                    <div class="project-card">
-                        <h3><%= project.title %></h3>
-                        <p><strong>Organization:</strong> <%= project.organization_name %></p>
-                        <p><strong>Date:</strong> <%= new Date(project.project_date).toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
-                        }) %></p>
-                        <p><strong>Location:</strong> <%= project.location || 'TBD' %></p>
+                    <li>
+                        <h2>
+                            <a href="/project/<%= project.project_id %>">
+                                <%= project.title %>
+                            </a>
+                        </h2>
                         <p><%= project.description %></p>
-                        
-                        <!-- Display categories if available -->
-                        <% if (project.categories && project.categories.length > 0) { %>
-                            <p><strong>Categories:</strong> 
-                                <%= project.categories.join(', ') %>
-                            </p>
-                        <% } %>
-                    </div>
-                <% }); %>
-            <% } else { %>
-                <p>No upcoming projects found. Check back soon!</p>
-            <% } %>
-        </div>
-    </main>
+                        <p>
+                            <strong>Date:</strong> <%= new Date(project.project_date).toLocaleDateString() %>
+                        </p>
+                        <p>
+                            <strong>Location:</strong> <%= project.location || 'TBD' %>
+                        </p>
+                        <p>
+                            <strong>Organization:</strong> 
+                            <a href="/organization/<%= project.organization_id %>">
+                                <%= project.organization_name %>
+                            </a>
+                        </p>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>No upcoming service projects found.</p>
+        <% } %>
+    </div>
+</main>
+
 <%- include('partials/footer') %>

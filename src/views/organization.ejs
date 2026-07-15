@@ -1,0 +1,53 @@
+<%- include('partials/header') %>
+
+<main>
+    <h1><%= organizationDetails.name %></h1>
+    
+    <% if (organizationDetails.logo_filename) { %>
+        <div class="organization-logo">
+            <img src="/images/<%= organizationDetails.logo_filename %>" alt="<%= organizationDetails.name %> logo">
+        </div>
+    <% } %>
+    
+    <div class="organization-description">
+        <h2>About This Organization</h2>
+        <p><%= organizationDetails.description %></p>
+    </div>
+    
+    <% if (organizationDetails.contact_email) { %>
+        <div class="organization-contact">
+            <h2>Contact Information</h2>
+            <p>Email: <a href="mailto:<%= organizationDetails.contact_email %>"><%= organizationDetails.contact_email %></a></p>
+        </div>
+    <% } %>
+    
+    <div class="organization-projects">
+        <h2>Service Projects</h2>
+        
+        <% if (projects && projects.length > 0) { %>
+            <ul>
+                <% projects.forEach(project => { %>
+                    <li>
+                        <!-- Link to project details -->
+                        <a href="/project/<%= project.project_id %>">
+                            <strong><%= project.title %></strong>
+                        </a>
+                        <% if (project.location) { %>
+                            <span class="location"> - <%= project.location %></span>
+                        <% } %>
+                        <% if (project.project_date) { %>
+                            <span class="date"> - <%= new Date(project.project_date).toLocaleDateString() %></span>
+                        <% } %>
+                        <p><%= project.description %></p>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>No service projects currently available for this organization.</p>
+        <% } %>
+    </div>
+    
+    <p><a href="/organizations">← Back to All Organizations</a></p>
+</main>
+
+<%- include('partials/footer') %>
