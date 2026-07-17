@@ -1,49 +1,24 @@
 <%- include('partials/header') %>
 
-<div class="container">
-    <div class="page-header">
-        <h1><%= title %></h1>
-        <p>Discover meaningful ways to make a difference in your community</p>
-    </div>
-
+<main>
+    <h1><%= title %></h1>
+    
     <div class="categories-grid">
         <% if (categories && categories.length > 0) { %>
-            <% categories.forEach((category, index) => { %>
-                <!-- Dynamic category card -->
-                <div class="category-card category-<%= category.name.toLowerCase().replace(/ /g, '-') %>">
-                    <span class="category-icon">
-                        <!-- You can add logic for icons based on category name -->
-                        <% if (category.name.toLowerCase().includes('environment')) { %>
-                            🌿
-                        <% } else if (category.name.toLowerCase().includes('education')) { %>
-                            📚
-                        <% } else if (category.name.toLowerCase().includes('community')) { %>
-                            🤝
-                        <% } else if (category.name.toLowerCase().includes('health') || category.name.toLowerCase().includes('wellness')) { %>
-                            ❤️
-                        <% } else if (category.name.toLowerCase().includes('youth')) { %>
-                            🌟
-                        <% } else if (category.name.toLowerCase().includes('technology')) { %>
-                            💻
-                        <% } else if (category.name.toLowerCase().includes('food')) { %>
-                            🍎
-                        <% } else { %>
-                            🌟
-                        <% } %>
-                    </span>
-                    <h2><%= category.name %></h2>
-                    <p><%= category.description || 'No description available' %></p>
-                    <div class="category-stats">
-                        <span>📋 ID: <%= category.category_id %></span>
-                        <!-- You can add project count here if you query it -->
-                    </div>
-                    <a href="/projects?category=<%= category.category_id %>" class="category-link">View Projects →</a>
-                </div>
-            <% }); %>
+            <ul>
+                <% categories.forEach(category => { %>
+                    <li>
+                        <a href="/category/<%= category.category_id %>">
+                            <h2><%= category.name %></h2>
+                        </a>
+                        <p><%= category.project_count %> project(s)</p>
+                    </li>
+                <% }) %>
+            </ul>
         <% } else { %>
-            <p class="no-categories">No categories available. Please add some categories.</p>
+            <p>No categories found.</p>
         <% } %>
     </div>
-</div>
+</main>
 
 <%- include('partials/footer') %>

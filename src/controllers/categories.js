@@ -1,7 +1,8 @@
-// Import any needed model functions
-import { getAllCategoriesWithCounts } from '../models/category.js';
+import { getAllCategoriesWithCounts, getCategoryById, getProjectsByCategory } from '../models/category.js';
 
-// Define any controller functions
+/**
+ * Display the categories list page
+ */
 const showCategoriesPage = async (req, res, next) => {
     try {
         const categories = await getAllCategoriesWithCounts();
@@ -16,5 +17,30 @@ const showCategoriesPage = async (req, res, next) => {
     }
 };
 
-// Export any controller functions
-export { showCategoriesPage };
+/**
+ * Display the category details page
+ */
+const showCategoryDetailsPage = async (req, res, next) => {
+    try {
+        const categoryId = req.params.id;
+        const category = await getCategoryById(categoryId);
+        
+        if (!category) {
+            const err = new Error('Category not found');
+            err.status = 404;
+            return next(err);
+        }
+        
+        const projects = await getProjectsByCategory(categoryId);
+        const title = category.name;
+        
+        res.render('category', { title, category, projects });
+    } catch (error) {
+        console.error('Error fetching category details:', error);
+        const err = new Error('Failed to load category details');
+        err.status = 500;
+        next(err);
+    }
+};
+
+export { showCategoriesPage, showCategoryDetailsPage };
