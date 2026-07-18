@@ -34,6 +34,7 @@ const showCategoryDetailsPage = async (req, res, next) => {
         const projects = await getProjectsByCategory(categoryId);
         const title = category.name;
         
+        // THIS LINE WAS MISSING - ADD IT!
         res.render('category', { title, category, projects });
     } catch (error) {
         console.error('Error fetching category details:', error);

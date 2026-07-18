@@ -3,20 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %> - CSE 340 Service Network</title>
+    <title><%= title %></title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
     <header>
         <nav>
-            <a href="/" class="logo">CSE 340<span>Network</span></a>
-            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
-            <ul id="navMenu">
-                <li><a href="/" class="<%= title === 'Home' ? 'active' : '' %>">Home</a></li>
-                <li><a href="/organizations" class="<%= title === 'Our Partner Organizations' ? 'active' : '' %>">Organizations</a></li>
-                <li><a href="/projects" class="<%= title === 'Service Projects' ? 'active' : '' %>">Projects</a></li>
-                <li><a href="/categories" class="<%= title === 'Service Categories' ? 'active' : '' %>">Categories</a></li>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/organizations">Organizations</a></li>
+                <li><a href="/projects">Projects</a></li>
+                <li><a href="/categories">Categories</a></li>
             </ul>
         </nav>
     </header>
-    <main>
+
+    <!-- Flash Messages -->
+    <% const messages = flash(); %>
+    <% Object.keys(messages).forEach(type => { %>
+        <% if (messages[type].length > 0) { %>
+            <div class="alert <%= type %>">
+                <% messages[type].forEach(msg => { %>
+                    <p><%= msg %></p>
+                <% }); %>
+            </div>
+        <% } %>
+    <% }); %>

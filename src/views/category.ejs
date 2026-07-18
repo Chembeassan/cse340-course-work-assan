@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - CSE 340 Service Network</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <main class="container">
+        <div class="category-header">
+            <h1><%= category.name %></h1>
+            <% if (category.description) { %>
+                <p class="category-description"><%= category.description %></p>
+            <% } %>
+        </div>
+        
+        <section class="category-projects">
+            <h2>Projects in this Category</h2>
+            
+            <% if (projects && projects.length > 0) { %>
+                <div class="projects-grid">
+                    <% projects.forEach(project => { %>
+                        <div class="project-card">
+                            <h3>
+                                <a href="/project/<%= project.project_id %>">
+                                    <%= project.title %>
+                                </a>
+                            </h3>
+                            <p class="project-description"><%= project.description %></p>
+                            <div class="project-meta">
+                                <span class="organization">
+                                    By: <a href="/organization/<%= project.organization_id %>">
+                                        <%= project.organization_name %>
+                                    </a>
+                                </span>
+                                <span class="location"><%= project.location %></span>
+                                <span class="date"><%= new Date(project.project_date).toLocaleDateString() %></span>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p class="no-projects">No projects currently in this category.</p>
+            <% } %>
+        </section>
+        
+        <div class="back-link">
+            <a href="/categories">← Back to Categories</a>
+        </div>
+    </main>
+    
+    <%- include('partials/footer') %>
+</body>
+</html>

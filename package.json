@@ -1,16 +1,22 @@
 {
-  "name": "cse340-course-work-assan",
-  "version": "1.0.0",
-  "description": "CSE 340 web backend development project",
-  "type": "module",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
-  },
-  "dependencies": {
-    "dotenv": "^17.4.2",
-    "ejs": "^6.0.1",
-    "express": "^4.21.2",
-    "pg": "^8.22.0"
-  }
+    "name":  "cse340-course-work-assan",
+    "version":  "1.0.0",
+    "description":  "Cse 340 web Backend Development project",
+    "main":  "server.js",
+    "type":  "module",
+    "scripts":  {
+                    "test":  "echo \"Error: no test specified\" \u0026\u0026 exit 1",
+                    "start":  "node server.js",
+                    "dev":  "nodemon server.js"
+                },
+    "dependencies":  {
+                         "dotenv":  "^17.4.2",
+                         "ejs":  "^6.0.1",
+                         "express":  "^4.22.2",
+                         "express-session":  "^1.19.0",
+                         "pg":  "^8.22.0"
+                     },
+    "devDependencies":  {
+                            "nodemon":  "^3.1.14"
+                        }
 }

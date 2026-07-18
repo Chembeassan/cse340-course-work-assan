@@ -1,8 +1,6 @@
-// Import model functions
-import { getAllOrganizations, getOrganizationDetails } from '../models/organizations.js';
+import { getAllOrganizations, getOrganizationDetails, createOrganization } from '../models/organizations.js';
 import { getProjectsByOrganizationId } from '../models/projects.js';
 
-// Controller for the organizations list page
 const showOrganizationsPage = async (req, res, next) => {
     try {
         const organizations = await getAllOrganizations();
@@ -16,22 +14,17 @@ const showOrganizationsPage = async (req, res, next) => {
     }
 };
 
-// Controller for the organization details page
 const showOrganizationDetailsPage = async (req, res, next) => {
     try {
         const organizationId = req.params.id;
-        
-        // Get organization details
         const organizationDetails = await getOrganizationDetails(organizationId);
         
-        // If organization doesn't exist, return 404
         if (!organizationDetails) {
             const err = new Error('Organization not found');
             err.status = 404;
             return next(err);
         }
         
-        // Get projects for this organization 
         const projects = await getProjectsByOrganizationId(organizationId);
         const title = organizationDetails.name;
         
@@ -44,5 +37,32 @@ const showOrganizationDetailsPage = async (req, res, next) => {
     }
 };
 
-// Export controller functions
-export { showOrganizationsPage, showOrganizationDetailsPage };
+const showNewOrganizationForm = async (req, res) => {
+    const title = 'Add New Organization';
+    res.render('new-organization', { title });
+};
+
+const processNewOrganizationForm = async (req, res, next) => {
+    try {
+        const { name, description, contactEmail } = req.body;
+        const logoFilename = 'placeholder-logo.png';
+        
+        const organizationId = await createOrganization(name, description, contactEmail, logoFilename);
+        
+        req.flash('success', 'Organization added successfully!');
+        
+        res.redirect(`/organization/${organizationId}`);
+    } catch (error) {
+        console.error('Error creating organization:', error);
+        const err = new Error('Failed to create organization');
+        err.status = 500;
+        next(err);
+    }
+};
+
+export { 
+    showOrganizationsPage, 
+    showOrganizationDetailsPage,
+    showNewOrganizationForm,
+    processNewOrganizationForm
+};

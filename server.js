@@ -1,21 +1,32 @@
 import 'dotenv/config';
 import express from 'express';
+import session from 'express-session';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { testConnection } from './src/models/db.js';
 import router from './src/routes.js';
+import flash from './src/middleware/flash.js';
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000;
+const SESSION_SECRET = process.env.SESSION_SECRET;
 
-/**
-  * Configure Express middleware
-  */
+// Set up session management
+app.use(session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60 * 60 * 1000 }
+}));
+
+// Use flash message middleware
+app.use(flash);
+
+// Configure Express middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware to log all incoming requests
 app.use((req, res, next) => {
@@ -33,12 +44,13 @@ app.use((req, res, next) => {
 
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
-
-// Tell Express where to find your templates
 app.set('views', path.join(__dirname, 'src/views'));
 
-// Use the imported router to handle routes
+// IMPORTANT: Use routes BEFORE static files
 app.use(router);
+
+// Static files AFTER routes
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Catch-all route for 404 errors
 app.use((req, res, next) => {
@@ -49,22 +61,18 @@ app.use((req, res, next) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
-    // Log error details for debugging
     console.error('Error occurred:', err.message);
     console.error('Stack trace:', err.stack);
     
-    // Determine status and template
     const status = err.status || 500;
     const template = status === 404 ? '404' : '500';
     
-    // Prepare data for the template
     const context = {
         title: status === 404 ? 'Page Not Found' : 'Server Error',
         error: err.message,
         stack: err.stack
     };
     
-    // Render the appropriate error template
     res.status(status).render(`errors/${template}`, context);
 });
 

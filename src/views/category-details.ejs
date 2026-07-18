@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <main class="container">
+        <h1><%= category.name %></h1>
+        <% if (category.description) { %>
+            <p class="category-description"><%= category.description %></p>
+        <% } %>
+        
+        <h2>Projects in this Category</h2>
+        <% if (projects && projects.length > 0) { %>
+            <ul class="project-list">
+                <% projects.forEach(project => { %>
+                    <li>
+                        <a href="/project/<%= project.id %>" class="project-link">
+                            <%= project.name %>
+                        </a>
+                        <span class="organization-name">
+                            by <a href="/organization/<%= project.organization_id %>">
+                                <%= project.organization_name %>
+                            </a>
+                        </span>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p class="no-items">No projects currently in this category.</p>
+        <% } %>
+        
+        <a href="/categories" class="back-link">← Back to Categories</a>
+    </main>
+    
+    <%- include('partials/footer') %>
+</body>
+</html>
