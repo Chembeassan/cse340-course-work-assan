@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - CSE 340 Service Network</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <main>
+        <div class="container">
+            <h1>Edit Organization</h1>
+            
+            <form action="/edit-organization/<%= organizationDetails.organization_id %>" method="POST" class="organization-form">
+                <div class="form-group">
+                    <label for="name">Organization Name *</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        required 
+                        maxlength="150"
+                        placeholder="Enter organization name"
+                        value="<%= formData && formData.name ? formData.name : organizationDetails.name %>"
+                    >
+                    <small class="help-text">Between 3 and 150 characters</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea 
+                        id="description" 
+                        name="description" 
+                        required 
+                        maxlength="500"
+                        rows="4"
+                        placeholder="Describe the organization's mission and work"
+                    ><%= formData && formData.description ? formData.description : organizationDetails.description %></textarea>
+                    <small class="help-text">Maximum 500 characters</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactEmail">Contact Email *</label>
+                    <input 
+                        type="email" 
+                        id="contactEmail" 
+                        name="contactEmail" 
+                        required
+                        placeholder="Enter contact email"
+                        value="<%= formData && formData.contactEmail ? formData.contactEmail : organizationDetails.contact_email %>"
+                    >
+                    <small class="help-text">Must be a valid email address</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="logoFilename">Logo Filename</label>
+                    <input 
+                        type="text" 
+                        id="logoFilename" 
+                        name="logoFilename" 
+                        placeholder="Enter logo filename"
+                        value="<%= formData && formData.logoFilename ? formData.logoFilename : organizationDetails.logo_filename %>"
+                    >
+                    <small class="help-text">Filename of the organization's logo (optional)</small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Organization</button>
+                    <a href="/organization/<%= organizationDetails.organization_id %>" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <%- include('partials/footer') %>
+</body>
+</html>

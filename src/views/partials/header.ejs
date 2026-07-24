@@ -9,7 +9,14 @@
 <body>
     <header>
         <nav>
-            <ul>
+            <a href="/" class="logo">CSE 340 <span>Service Network</span></a>
+            
+            <!-- Mobile menu toggle button -->
+            <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle navigation">
+                ☰
+            </button>
+            
+            <ul id="nav-menu">
                 <li><a href="/">Home</a></li>
                 <li><a href="/organizations">Organizations</a></li>
                 <li><a href="/projects">Projects</a></li>
@@ -29,3 +36,30 @@
             </div>
         <% } %>
     <% }); %>
+
+    <!-- Mobile menu JavaScript -->
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            menu.classList.toggle('open');
+        }
+
+        // Close menu when a link is clicked (on mobile)
+        document.querySelectorAll('#nav-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                const menu = document.getElementById('nav-menu');
+                menu.classList.remove('open');
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('nav-menu');
+            const button = document.querySelector('.mobile-menu-btn');
+            if (menu && button && menu.classList.contains('open') && 
+                !menu.contains(event.target) && 
+                !button.contains(event.target)) {
+                menu.classList.remove('open');
+            }
+        });
+    </script>

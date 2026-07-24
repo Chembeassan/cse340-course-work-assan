@@ -1,7 +1,10 @@
 <%- include('partials/header') %>
 
 <main>
-    <h1><%= organizationDetails.name %></h1>
+    <div class="org-header">
+        <h1><%= organizationDetails.name %></h1>
+        <a href="/edit-organization/<%= organizationDetails.organization_id %>" class="btn btn-edit">✏️ Edit Organization</a>
+    </div>
     
     <% if (organizationDetails.logo_filename) { %>
         <div class="organization-logo">
@@ -28,7 +31,6 @@
             <ul>
                 <% projects.forEach(project => { %>
                     <li>
-                        <!-- Link to project details -->
                         <a href="/project/<%= project.project_id %>">
                             <strong><%= project.title %></strong>
                         </a>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - CSE 340 Service Network</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1>Assign Categories to Project</h1>
+                <p>Select categories for: <strong><%= project.title %></strong></p>
+            </div>
+            
+            <form action="/project/<%= project.project_id %>/assign-categories" method="POST" class="assign-categories-form">
+                <div class="form-group">
+                    <label>Categories</label>
+                    <div class="checkbox-group">
+                        <% if (allCategories && allCategories.length > 0) { %>
+                            <% allCategories.forEach(category => { %>
+                                <div class="checkbox-item">
+                                    <input 
+                                        type="checkbox" 
+                                        id="category_<%= category.category_id %>" 
+                                        name="categoryIds" 
+                                        value="<%= category.category_id %>"
+                                        <%= assignedCategoryIds && assignedCategoryIds.includes(category.category_id) ? 'checked' : '' %>
+                                    >
+                                    <label for="category_<%= category.category_id %>">
+                                        <%= category.name %>
+                                        <% if (category.description) { %>
+                                            <span class="category-description"> - <%= category.description %></span>
+                                        <% } %>
+                                    </label>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <p>No categories available. Please create categories first.</p>
+                        <% } %>
+                    </div>
+                    <small class="help-text">Select one or more categories for this project</small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save Categories</button>
+                    <a href="/project/<%= project.project_id %>" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <%- include('partials/footer') %>
+</body>
+</html>
