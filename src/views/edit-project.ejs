@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - CSE 340 Service Network</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1>Edit Service Project</h1>
+                <p>Update the project details</p>
+            </div>
+            
+            <form action="/edit-project/<%= project.project_id %>" method="POST" class="organization-form">
+                <div class="form-group">
+                    <label for="organizationId">Organization *</label>
+                    <select id="organizationId" name="organizationId" required class="form-select">
+                        <option value="">Select an organization</option>
+                        <% organizations.forEach(org => { %>
+                            <option value="<%= org.organization_id %>" 
+                                <%= (formData && formData.organizationId) ? 
+                                    (formData.organizationId == org.organization_id ? 'selected' : '') : 
+                                    (project.organization_id == org.organization_id ? 'selected' : '') 
+                                %>>
+                                <%= org.name %>
+                            </option>
+                        <% }) %>
+                    </select>
+                    <small class="help-text">Select the organization responsible for this project</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="title">Project Title *</label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        required 
+                        minlength="3"
+                        maxlength="200"
+                        placeholder="Enter project title"
+                        value="<%= formData && formData.title ? formData.title : project.title %>"
+                    >
+                    <small class="help-text">Between 3 and 200 characters</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea 
+                        id="description" 
+                        name="description" 
+                        required 
+                        maxlength="1000"
+                        rows="5"
+                        placeholder="Describe the project details, goals, and requirements"
+                    ><%= formData && formData.description ? formData.description : project.description %></textarea>
+                    <small class="help-text">Maximum 1000 characters</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Location *</label>
+                    <input 
+                        type="text" 
+                        id="location" 
+                        name="location" 
+                        required 
+                        maxlength="200"
+                        placeholder="Enter project location"
+                        value="<%= formData && formData.location ? formData.location : project.location %>"
+                    >
+                    <small class="help-text">Maximum 200 characters</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date">Project Date *</label>
+                    <input 
+                        type="date" 
+                        id="date" 
+                        name="date" 
+                        required
+                        value="<%= formData && formData.date ? formData.date : new Date(project.project_date).toISOString().split('T')[0] %>"
+                    >
+                    <small class="help-text">Select the date of the service project</small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Project</button>
+                    <a href="/project/<%= project.project_id %>" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <%- include('partials/footer') %>
+</body>
+</html>

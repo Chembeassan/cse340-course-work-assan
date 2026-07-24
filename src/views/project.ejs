@@ -5,6 +5,7 @@
         <div class="project-header">
             <h1><%= project.title %></h1>
             <div class="project-actions">
+                <a href="/edit-project/<%= project.project_id %>" class="btn btn-edit">✏️ Edit Project</a>
                 <a href="/project/<%= project.project_id %>/assign-categories" class="btn btn-categories">
                     🏷️ Edit Categories
                 </a>

@@ -131,6 +131,28 @@ const createProject = async (title, description, location, date, organizationId)
     return result.rows[0].project_id;
 };
 
+// Update Project
+const updateProject = async (projectId, title, description, location, date, organizationId) => {
+    const query = `
+        UPDATE project 
+        SET 
+            title = $1, 
+            description = $2, 
+            location = $3, 
+            project_date = $4, 
+            organization_id = $5
+        WHERE project_id = $6
+        RETURNING *
+    `;
+    const values = [title, description, location, date, organizationId, projectId];
+    const result = await db.query(query, values);
+    
+    if (result.rows.length === 0) {
+        throw new Error('Failed to update project');
+    }
+    
+    return result.rows[0];
+};
 
 // Export the model functions
 export { 
@@ -139,5 +161,6 @@ export {
     getProjectById,
     getUpcomingProjects,
     getProjectDetails,
-    createProject
+    createProject,
+    updateProject
 };
