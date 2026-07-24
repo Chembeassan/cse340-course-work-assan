@@ -1,24 +1,55 @@
-<%- include('partials/header') %>
-
-<main>
-    <h1><%= title %></h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - CSE 340 Service Network</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <%- include('partials/header') %>
     
-    <div class="categories-grid">
-        <% if (categories && categories.length > 0) { %>
-            <ul>
-                <% categories.forEach(category => { %>
-                    <li>
-                        <a href="/category/<%= category.category_id %>">
-                            <h2><%= category.name %></h2>
-                        </a>
-                        <p><%= category.project_count %> project(s)</p>
-                    </li>
-                <% }) %>
-            </ul>
-        <% } else { %>
-            <p>No categories found.</p>
-        <% } %>
-    </div>
-</main>
-
-<%- include('partials/footer') %>
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1>Service Categories</h1>
+                <p>Browse service projects by category</p>
+                
+                <a href="/new-category" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">+ Add New Category</a>
+            </div>
+            
+            <% if (categories && categories.length > 0) { %>
+                <div class="categories-grid">
+                    <% categories.forEach(category => { %>
+                        <div class="category-card">
+                            <div class="category-header">
+                                <h2>
+                                    <a href="/category/<%= category.category_id %>">
+                                        <%= category.name %>
+                                    </a>
+                                </h2>
+                            
+                                <a href="/edit-category/<%= category.category_id %>" class="btn-edit-small">✏️</a>
+                            </div>
+                            <% if (category.description) { %>
+                                <p><%= category.description %></p>
+                            <% } %>
+                            <div class="category-stats">
+                                <span>📁 Projects: <%= category.project_count || 0 %></span>
+                            </div>
+                            <a href="/category/<%= category.category_id %>" class="category-link">
+                                View Projects →
+                            </a>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p>No categories available at this time.</p>
+                <p><a href="/new-category">Add the first category!</a></p>
+            <% } %>
+        </div>
+    </main>
+    
+    <%- include('partials/footer') %>
+</body>
+</html>

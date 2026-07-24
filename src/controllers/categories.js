@@ -3,16 +3,19 @@ import {
     getCategoryById, 
     getProjectsByCategoryId,
     getCategoriesByProjectId,
-    updateCategoryAssignments
+    updateCategoryAssignments,
+    createCategory,     
+    updateCategory     
 } from '../models/categories.js';
-import { getProjectDetails } from '../models/projects.js'; 
+import { getProjectDetails } from '../models/projects.js';
+import { body, validationResult } from 'express-validator';
 
 /**
  * Display the categories list page
  */
 const showCategoriesPage = async (req, res, next) => {
     try {
-        const categories = await getAllCategoriesWithCounts();
+        const categories = await getAllCategories();
         console.log('Categories loaded:', categories.length);
         const title = 'Service Categories';
         res.render('categories', { title, categories });
@@ -38,10 +41,9 @@ const showCategoryDetailsPage = async (req, res, next) => {
             return next(err);
         }
         
-        const projects = await getProjectsByCategory(categoryId);
+        const projects = await getProjectsByCategoryId(categoryId);
         const title = category.name;
         
-    
         res.render('category', { title, category, projects });
     } catch (error) {
         console.error('Error fetching category details:', error);
@@ -51,7 +53,9 @@ const showCategoryDetailsPage = async (req, res, next) => {
     }
 };
 
-// Show Assign Categories Form
+/**
+ * Display the assign categories form
+ */
 const showAssignCategoriesForm = async (req, res, next) => {
     try {
         const projectId = req.params.projectId;
@@ -87,7 +91,9 @@ const showAssignCategoriesForm = async (req, res, next) => {
     }
 };
 
-//  Process Assign Categories Form
+/**
+ * Process the assign categories form
+ */
 const processAssignCategoriesForm = async (req, res, next) => {
     try {
         const projectId = req.params.projectId;
@@ -117,10 +123,124 @@ const processAssignCategoriesForm = async (req, res, next) => {
     }
 };
 
+// Category Validation Rules
+const categoryValidation = [
+    body('name')
+        .trim()
+        .notEmpty()
+        .withMessage('Category name is required')
+        .isLength({ min: 3, max: 100 })
+        .withMessage('Category name must be between 3 and 100 characters')
+];
 
+//  Show New Category Form
+const showNewCategoryForm = async (req, res) => {
+    const title = 'Add New Category';
+    const formData = req.flash('formData') ? req.flash('formData')[0] : {};
+    res.render('new-category', { 
+        title,
+        formData: formData
+    });
+};
+
+// Process New Category Form
+const processNewCategoryForm = async (req, res) => {
+    // Check for validation errors
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+        // Validation failed - loop through errors
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        // Store form data in flash to repopulate the form
+        req.flash('formData', req.body);
+        
+        // Redirect back to the new category form
+        return res.redirect('/new-category');
+    }
+
+    try {
+        const { name } = req.body;
+        await createCategory(name);
+        req.flash('success', 'Category added successfully!');
+        res.redirect('/categories');
+    } catch (error) {
+        console.error('Error creating category:', error);
+        req.flash('error', 'Failed to create category. Please try again.');
+        res.redirect('/new-category');
+    }
+};
+
+// Show Edit Category Form
+const showEditCategoryForm = async (req, res, next) => {
+    try {
+        const categoryId = req.params.id;
+        const category = await getCategoryById(categoryId);
+        
+        if (!category) {
+            const err = new Error('Category not found');
+            err.status = 404;
+            return next(err);
+        }
+        
+        const title = `Edit ${category.name}`;
+        const formData = req.flash('formData') ? req.flash('formData')[0] : {};
+        
+        res.render('edit-category', {
+            title,
+            category,
+            formData: formData
+        });
+    } catch (error) {
+        console.error('Error fetching category for edit:', error);
+        const err = new Error('Failed to load edit category form');
+        err.status = 500;
+        next(err);
+    }
+};
+
+// Process Edit Category Form
+const processEditCategoryForm = async (req, res) => {
+    // Check for validation errors
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+        // Validation failed - loop through errors
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        // Store form data in flash to repopulate the form
+        req.flash('formData', req.body);
+        
+        // Redirect back to the edit category form
+        return res.redirect(`/edit-category/${req.params.id}`);
+    }
+
+    try {
+        const categoryId = req.params.id;
+        const { name } = req.body;
+        
+        await updateCategory(categoryId, name);
+        
+        req.flash('success', 'Category updated successfully!');
+        res.redirect(`/category/${categoryId}`);
+    } catch (error) {
+        console.error('Error updating category:', error);
+        req.flash('error', 'Failed to update category. Please try again.');
+        res.redirect(`/edit-category/${req.params.id}`);
+    }
+};
+
+// Update exports
 export { 
     showCategoriesPage, 
     showCategoryDetailsPage,
-    showAssignCategoriesForm,     
-    processAssignCategoriesForm    
+    showAssignCategoriesForm,
+    processAssignCategoriesForm,
+    showNewCategoryForm,       
+    processNewCategoryForm,    
+    showEditCategoryForm,       
+    processEditCategoryForm,   
+    categoryValidation          
 };
