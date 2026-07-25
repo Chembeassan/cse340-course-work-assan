@@ -2,7 +2,8 @@ import {
     getAllProjects, 
     getProjectDetails, 
     createProject,
-    updateProject  
+    updateProject,
+    getUpcomingProjects  
 } from '../models/projects.js';
 import { getAllOrganizations } from '../models/organizations.js';
 import { getCategoriesByProjectId } from '../models/categories.js';
@@ -105,7 +106,9 @@ const processNewProjectForm = async (req, res) => {
     }
 };
 
-//Display edit project form
+/**
+ * Display edit project form
+ */
 const showEditProjectForm = async (req, res, next) => {
     try {
         const projectId = req.params.id;
@@ -140,7 +143,9 @@ const showEditProjectForm = async (req, res, next) => {
     }
 };
 
-// Process edit project form submission
+/**
+ * Process edit project form submission
+ */
 const processEditProjectForm = async (req, res) => {
     // Check for validation errors
     const results = validationResult(req);
@@ -211,6 +216,6 @@ export {
     showNewProjectForm,     
     processNewProjectForm,  
     showEditProjectForm,    
-    processEditProjectForm,  
+    processEditProjectForm, 
     projectValidation      
 };
