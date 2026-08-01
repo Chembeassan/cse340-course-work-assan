@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - CSE 340 Service Network</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1>Dashboard</h1>
+                <p>Welcome to your personal dashboard</p>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="dashboard-card">
+                    <h2>User Information</h2>
+                    <div class="user-info">
+                        <p><strong>Name:</strong> <%= name %></p>
+                        <p><strong>Email:</strong> <%= email %></p>
+                        <% if (role) { %>
+                            <p><strong>Role:</strong> <%= role %></p>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <div class="dashboard-actions">
+                    <h3>Quick Actions</h3>
+                    <div class="action-grid">
+                        <a href="/organizations" class="action-card">
+                            <span class="action-icon">🏢</span>
+                            <span class="action-label">View Organizations</span>
+                        </a>
+                        <a href="/projects" class="action-card">
+                            <span class="action-icon">📋</span>
+                            <span class="action-label">View Projects</span>
+                        </a>
+                        <a href="/categories" class="action-card">
+                            <span class="action-icon">🏷️</span>
+                            <span class="action-label">View Categories</span>
+                        </a>
+                        <a href="/new-project" class="action-card">
+                            <span class="action-icon">➕</span>
+                            <span class="action-label">Add New Project</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <%- include('partials/footer') %>
+</body>
+</html>

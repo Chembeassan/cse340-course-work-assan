@@ -21,6 +21,15 @@
                 <li><a href="/organizations">Organizations</a></li>
                 <li><a href="/projects">Projects</a></li>
                 <li><a href="/categories">Categories</a></li>
+                <% if (isLoggedIn) { %>
+                <!-- Show when logged in -->
+                <li><span class="user-greeting">Welcome, <%= currentUser.name %></span></li>
+                <li><a href="/logout" class="btn-logout-nav">Logout</a></li>
+            <% } else { %>
+                <!-- Show when logged out -->
+                <li><a href="/register" class="btn-register-nav">Register</a></li>
+                <li><a href="/login" class="btn-login-nav">Login</a></li>
+            <% } %>
             </ul>
         </nav>
     </header>

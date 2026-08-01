@@ -1,9 +1,45 @@
-<%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || 'CSE 340 Service Network' %></title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
     <main>
-        <h1><%= title %></h1>
-        <h2>Welcome to the CSE 340 Service Network!</h2>
-<p>Our mission is to promote service across the world by connecting volunteers with service opportunities in their community.</p>
-
-<img class="main-logo" src="images/cse340-service-network.png" alt="CSE 340 Service Network Logo">
+        <div class="container">
+            <section class="hero">
+                <h1>Welcome to CSE 340 Service Network</h1>
+                <p>Connecting volunteers with service opportunities in your community.</p>
+            </section>
+            
+            <section class="quick-links">
+                <div class="card">
+                    <h3><a href="/categories">Browse Categories</a></h3>
+                    <p>Explore service projects by category</p>
+                </div>
+                <div class="card">
+                    <h3><a href="/organizations">View Organizations</a></h3>
+                    <p>Find partner organizations</p>
+                </div>
+                <div class="card">
+                    <h3><a href="/projects">Upcoming Projects</a></h3>
+                    <p>See upcoming service opportunities</p>
+                </div>
+            </section>
+            
+            <!-- Dashboard link - only shows when logged in -->
+            <% if (isLoggedIn) { %>
+                <section class="dashboard-link-section">
+                    <a href="/dashboard" class="btn btn-dashboard">Go to My Dashboard →</a>
+                </section>
+            <% } %>
+        </div>
     </main>
-<%- include('partials/footer') %>
+    
+    <%- include('partials/footer') %>
+</body>
+</html>
