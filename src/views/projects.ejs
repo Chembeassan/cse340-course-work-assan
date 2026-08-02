@@ -1,37 +1,46 @@
 <%- include('partials/header') %>
 
 <main>
-    <h1><%= title %></h1>
-    
-    <div class="projects-grid">
-        <% if (projects && projects.length > 0) { %>
-            <ul>
-                <% projects.forEach(project => { %>
-                    <li>
-                        <h2>
+    <div class="container">
+        <div class="page-header">
+            <h1><%= title %></h1>
+            <p>Upcoming service opportunities</p>
+            
+            <!-- Admin-only add button -->
+            <% if (user && user.role_name === 'admin') { %>
+                <a href="/new-project" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">
+                    + Add New Project
+                </a>
+            <% } %>
+        </div>
+        
+        <div class="projects-grid">
+            <% if (projects && projects.length > 0) { %>
+                <ul>
+                    <% projects.forEach(project => { %>
+                        <li>
                             <a href="/project/<%= project.project_id %>">
-                                <%= project.title %>
+                                <h2><%= project.title %></h2>
                             </a>
-                        </h2>
-                        <p><%= project.description %></p>
-                        <p>
-                            <strong>Date:</strong> <%= new Date(project.project_date).toLocaleDateString() %>
-                        </p>
-                        <p>
-                            <strong>Location:</strong> <%= project.location || 'TBD' %>
-                        </p>
-                        <p>
-                            <strong>Organization:</strong> 
-                            <a href="/organization/<%= project.organization_id %>">
-                                <%= project.organization_name %>
-                            </a>
-                        </p>
-                    </li>
-                <% }) %>
-            </ul>
-        <% } else { %>
-            <p>No upcoming service projects found.</p>
-        <% } %>
+                            <p><%= project.description %></p>
+                            <p><strong>Location:</strong> <%= project.location %></p>
+                            <p><strong>Date:</strong> <%= new Date(project.project_date).toLocaleDateString() %></p>
+                            <p><strong>Organization:</strong> <%= project.organization_name %></p>
+                            <!-- Admin-only edit links -->
+                            <% if (user && user.role_name === 'admin') { %>
+                                <a href="/edit-project/<%= project.project_id %>" class="btn-edit-small">✏️ Edit</a>
+                                <a href="/project/<%= project.project_id %>/assign-categories" class="btn-categories-small">🏷️ Categories</a>
+                            <% } %>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p>No projects found.</p>
+                <% if (user && user.role_name === 'admin') { %>
+                    <p><a href="/new-project">Add the first project!</a></p>
+                <% } %>
+            <% } %>
+        </div>
     </div>
 </main>
 

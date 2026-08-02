@@ -1,29 +1,46 @@
 <%- include('partials/header') %>
 
 <main>
-    <h1><%= title %></h1>
-    
-    <div class="organizations-grid">
-        <% if (organizations && organizations.length > 0) { %>
-            <ul>
-                <% organizations.forEach(organization => { %>
-                    <li>
-                        <a href="/organization/<%= organization.organization_id %>">
-                            <h2><%= organization.name %></h2>
-                        </a>
-                        <p><%= organization.description %></p>
-                        <% if (organization.logo_filename) { %>
-                            <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo" style="max-width: 100px;">
-                        <% } %>
-                    </li>
-                <% }) %>
-            </ul>
-        <% } else { %>
-            <p>No organizations found.</p>
-        <% } %>
+    <div class="container">
+        <div class="page-header">
+            <h1><%= title %></h1>
+            <p>Partner organizations in our service network</p>
+            
+            <!-- Admin-only add button -->
+            <% if (user && user.role_name === 'admin') { %>
+                <a href="/new-organization" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">
+                    + Add New Organization
+                </a>
+            <% } %>
+        </div>
+        
+        <div class="organizations-grid">
+            <% if (organizations && organizations.length > 0) { %>
+                <ul>
+                    <% organizations.forEach(organization => { %>
+                        <li>
+                            <a href="/organization/<%= organization.organization_id %>">
+                                <h2><%= organization.name %></h2>
+                            </a>
+                            <p><%= organization.description %></p>
+                            <% if (organization.logo_filename) { %>
+                                <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo" style="max-width: 100px;">
+                            <% } %>
+                            <!-- Admin-only edit link -->
+                            <% if (user && user.role_name === 'admin') { %>
+                                <a href="/edit-organization/<%= organization.organization_id %>" class="btn-edit-small">✏️ Edit</a>
+                            <% } %>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p>No organizations found.</p>
+                <% if (user && user.role_name === 'admin') { %>
+                    <p><a href="/new-organization">Add the first organization!</a></p>
+                <% } %>
+            <% } %>
+        </div>
     </div>
-    
-    <p><a href="/new-organization">Add a new organization</a></p>
 </main>
 
 <%- include('partials/footer') %>

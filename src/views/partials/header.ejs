@@ -21,16 +21,24 @@
                 <li><a href="/organizations">Organizations</a></li>
                 <li><a href="/projects">Projects</a></li>
                 <li><a href="/categories">Categories</a></li>
-                <% if (isLoggedIn) { %>
-                <!-- Show when logged in -->
-                <li><span class="user-greeting">Welcome, <%= currentUser.name %></span></li>
+
+            <!-- Admin-only links -->
+            <% if (user && user.role_name === 'admin') { %>
+                <li><a href="/new-organization" class="admin-link">+ New Organization</a></li>
+                <li><a href="/new-project" class="admin-link">+ New Project</a></li>
+                <li><a href="/new-category" class="admin-link">+ New Category</a></li>
+            <% } %>
+            
+            <% if (isLoggedIn) { %>
+                <li><span class="user-greeting">Welcome, <%= user.name %></span></li>
+                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
                 <li><a href="/logout" class="btn-logout-nav">Logout</a></li>
             <% } else { %>
-                <!-- Show when logged out -->
                 <li><a href="/register" class="btn-register-nav">Register</a></li>
                 <li><a href="/login" class="btn-login-nav">Login</a></li>
             <% } %>
-            </ul>
+
+
         </nav>
     </header>
 

@@ -42,9 +42,11 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     // Set isLoggedIn based on session
     res.locals.isLoggedIn = false;
+    res.locals.user = null;
+    
     if (req.session && req.session.user) {
         res.locals.isLoggedIn = true;
-        res.locals.currentUser = req.session.user; // Optional: make user available in views
+        res.locals.user = req.session.user;
     }
 
     res.locals.NODE_ENV = process.env.NODE_ENV;
