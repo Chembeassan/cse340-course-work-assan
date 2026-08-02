@@ -23,10 +23,47 @@
                         <p><strong>Name:</strong> <%= name %></p>
                         <p><strong>Email:</strong> <%= email %></p>
                         <% if (role) { %>
-                            <p><strong>Role:</strong> <%= role %></p>
+                            <p><strong>Role:</strong> <span class="role-badge <%= role === 'admin' ? 'role-admin' : 'role-user' %>"><%= role %></span></p>
                         <% } %>
                     </div>
                 </div>
+                
+                <!-- Admin-only actions -->
+                <% if (role === 'admin') { %>
+                    <div class="dashboard-card admin-actions">
+                        <h2>Admin Actions</h2>
+                        <div class="action-grid">
+                            <a href="/users" class="action-card">
+                                <span class="action-icon">👥</span>
+                                <span class="action-label">Manage Users</span>
+                            </a>
+                            <a href="/organizations" class="action-card">
+                                <span class="action-icon">🏢</span>
+                                <span class="action-label">View Organizations</span>
+                            </a>
+                            <a href="/projects" class="action-card">
+                                <span class="action-icon">📋</span>
+                                <span class="action-label">View Projects</span>
+                            </a>
+                            <a href="/categories" class="action-card">
+                                <span class="action-icon">🏷️</span>
+                                <span class="action-label">View Categories</span>
+                            </a>
+                            <a href="/new-organization" class="action-card">
+                                <span class="action-icon">➕</span>
+                                <span class="action-label">Add Organization</span>
+                            </a>
+                            <a href="/new-project" class="action-card">
+                                <span class="action-icon">➕</span>
+                                <span class="action-label">Add Project</span>
+                            </a>
+                            <a href="/new-category" class="action-card">
+                                <span class="action-icon">➕</span>
+                                <span class="action-label">Add Category</span>
+                            </a>
+                        </div>
+                    </div>
+                <% } %>
                 
                 <div class="dashboard-actions">
                     <h3>Quick Actions</h3>
@@ -42,10 +79,6 @@
                         <a href="/categories" class="action-card">
                             <span class="action-icon">🏷️</span>
                             <span class="action-label">View Categories</span>
-                        </a>
-                        <a href="/new-project" class="action-card">
-                            <span class="action-icon">➕</span>
-                            <span class="action-label">Add New Project</span>
                         </a>
                     </div>
                 </div>

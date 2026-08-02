@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { createUser, getUserByEmail, authenticateUser } from '../models/users.js';
+import { createUser, getUserByEmail, authenticateUser, getAllUsers } from '../models/users.js';
 import { body, validationResult } from 'express-validator';
 
 const saltRounds = 10;
@@ -8,7 +8,6 @@ const saltRounds = 10;
 
 /**
  * Middleware to require login for protected routes
- * Redirects to login page if user is not logged in
  */
 const requireLogin = (req, res, next) => {
     if (!req.session || !req.session.user) {
@@ -20,28 +19,22 @@ const requireLogin = (req, res, next) => {
 
 /**
  * Middleware factory to require a specific role
- * @param {string} role - The role name required (e.g., 'admin')
- * @returns {Function} Middleware function
  */
 const requireRole = (role) => {
     return (req, res, next) => {
-        // First check if user is logged in
         if (!req.session || !req.session.user) {
             req.flash('error', 'Please log in to access this page.');
             return res.redirect('/login');
         }
 
-        // Then check if user has the required role
         if (req.session.user.role_name !== role) {
             req.flash('error', 'You do not have permission to access this page.');
             return res.redirect('/');
         }
 
-        // User has the required role
         next();
     };
 };
-
 
 // ===== REGISTRATION FUNCTIONS =====
 
@@ -58,7 +51,6 @@ const showUserRegistrationForm = (req, res) => {
  * Process user registration form submission
  */
 const processUserRegistrationForm = async (req, res) => {
-    // Check for validation errors
     const results = validationResult(req);
     if (!results.isEmpty()) {
         results.array().forEach((error) => {
@@ -71,7 +63,6 @@ const processUserRegistrationForm = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-        // Check if user already exists
         const existingUser = await getUserByEmail(email);
         if (existingUser) {
             req.flash('error', 'Email already registered. Please use a different email.');
@@ -79,10 +70,7 @@ const processUserRegistrationForm = async (req, res) => {
             return res.redirect('/register');
         }
 
-        // Hash the password
         const passwordHash = await bcrypt.hash(password, saltRounds);
-
-        // Create the user
         const userId = await createUser(name, email, passwordHash);
 
         req.flash('success', 'Registration successful! Please log in.');
@@ -113,11 +101,9 @@ const processLoginForm = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Authenticate the user
         const user = await authenticateUser(email, password);
 
         if (user) {
-            // Store user in session
             req.session.user = {
                 user_id: user.user_id,
                 name: user.name,
@@ -127,10 +113,11 @@ const processLoginForm = async (req, res) => {
             };
             
             console.log('User logged in:', user.email);
+            console.log('User role:', user.role_name);
+            
             req.flash('success', `Welcome back, ${user.name}!`);
-            return res.redirect('/dashboard');  // CHANGED: Redirect to dashboard
+            return res.redirect('/dashboard');
         } else {
-            // Authentication failed
             req.flash('error', 'Invalid email or password. Please try again.');
             req.flash('formData', req.body);
             return res.redirect('/login');
@@ -152,7 +139,6 @@ const processLogout = (req, res) => {
             req.flash('error', 'Logout failed. Please try again.');
             return res.redirect('/');
         }
-        
         req.flash('success', 'You have been logged out successfully.');
         res.redirect('/login');
     });
@@ -174,7 +160,30 @@ const showDashboard = (req, res) => {
     });
 };
 
-// Validation rules for registration
+// ===== USERS LIST FUNCTION (NEW) =====
+
+/**
+ * Display all users (admin only)
+ */
+const showUsersPage = async (req, res, next) => {
+    try {
+        const users = await getAllUsers();
+        const title = 'Manage Users';
+        res.render('users', { 
+            title, 
+            users,
+            currentUser: req.session.user
+        });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        const err = new Error('Failed to load users');
+        err.status = 500;
+        next(err);
+    }
+};
+
+// ===== VALIDATION =====
+
 const userRegistrationValidation = [
     body('name')
         .trim()
@@ -196,6 +205,8 @@ const userRegistrationValidation = [
         .withMessage('Password must be at least 8 characters long')
 ];
 
+// ===== EXPORTS =====
+
 export {
     // Registration
     showUserRegistrationForm,
@@ -207,7 +218,9 @@ export {
     processLogout,
     // Middleware
     requireLogin,
-     requireRole,      
+    requireRole,
     // Dashboard
-    showDashboard       
+    showDashboard,
+    // Users List
+    showUsersPage 
 };

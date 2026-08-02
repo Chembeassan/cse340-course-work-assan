@@ -50,7 +50,7 @@ const getUserByEmail = async (email) => {
 };
 
 /**
- * Find a user by email (for authentication)
+ * Find a user by email (internal use only)
  */
 const findUserByEmail = async (email) => {
     const query = `
@@ -70,14 +70,14 @@ const findUserByEmail = async (email) => {
 };
 
 /**
- * Verify password
+ * Verify a password against a hash
  */
 const verifyPassword = async (password, passwordHash) => {
     return bcrypt.compare(password, passwordHash);
 };
 
 /**
- * Authenticate user
+ * Authenticate a user with email and password
  */
 const authenticateUser = async (email, password) => {
     const user = await findUserByEmail(email);
@@ -94,8 +94,28 @@ const authenticateUser = async (email, password) => {
     return userWithoutPassword;
 };
 
+/**
+ * Get all users with their roles (for admin users page)
+ */
+const getAllUsers = async () => {
+    const query = `
+        SELECT 
+            u.user_id,
+            u.name,
+            u.email,
+            u.created_at,
+            r.role_name
+        FROM users u
+        JOIN roles r ON u.role_id = r.role_id
+        ORDER BY u.user_id
+    `;
+    const result = await db.query(query);
+    return result.rows;
+};
+
 export { 
     createUser, 
     getUserByEmail,
-    authenticateUser
+    authenticateUser,
+    getAllUsers  
 };
