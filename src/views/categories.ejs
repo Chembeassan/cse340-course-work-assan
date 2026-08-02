@@ -3,7 +3,7 @@
 <main>
     <div class="container">
         <div class="page-header">
-            <h1><%= title %></h1>
+            <h1>Service Categories</h1>
             <p>Browse service projects by category</p>
             
             <!-- Admin-only add button -->
@@ -16,21 +16,29 @@
         
         <div class="categories-grid">
             <% if (categories && categories.length > 0) { %>
-                <ul>
-                    <% categories.forEach(category => { %>
-                        <li>
-                            <a href="/category/<%= category.category_id %>">
-                                <h2><%= category.name %></h2>
-                            </a>
+                <% categories.forEach(function(category) { %>
+                    <div class="category-card">
+                        <div class="category-header">
+                            <h2>
+                                <a href="/category/<%= category.category_id %>">
+                                    <%= category.name %>
+                                </a>
+                            </h2>
                             <!-- Admin-only edit link -->
                             <% if (user && user.role_name === 'admin') { %>
                                 <a href="/edit-category/<%= category.category_id %>" class="btn-edit-small">✏️ Edit</a>
                             <% } %>
-                        </li>
-                    <% }) %>
-                </ul>
-            <% } else { ?>
-                <p>No categories found.</p>
+                        </div>
+                        <div class="category-stats">
+                            <span>📁 Projects: <%= category.project_count || 0 %></span>
+                        </div>
+                        <a href="/category/<%= category.category_id %>" class="category-link">
+                            View Projects →
+                        </a>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No categories available.</p>
                 <% if (user && user.role_name === 'admin') { %>
                     <p><a href="/new-category">Add the first category!</a></p>
                 <% } %>
