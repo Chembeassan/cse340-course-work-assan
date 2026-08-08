@@ -1255,6 +1255,142 @@ main {
     color: #742a2a;
 }
 
+/* ===== VOLUNTEER STYLES ===== */
+.project-volunteer {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+.volunteer-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.volunteer-status p {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.volunteer-active {
+    color: #22543d;
+    background: #c6f6d5;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.volunteer-inactive {
+    color: #2d3748;
+    background: #ebf8ff;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.volunteer-login {
+    color: #718096;
+    background: #f7fafc;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.volunteer-login a {
+    color: #4299e1;
+    text-decoration: none;
+}
+
+.btn-volunteer {
+    background-color: #48bb78;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-volunteer:hover {
+    background-color: #38a169;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+.btn-danger {
+    background-color: #fc8181;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #e53e3e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(252, 129, 129, 0.3);
+}
+
+/* ===== VOLUNTEER LIST ON DASHBOARD ===== */
+.volunteer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.volunteer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f7fafc;
+    border-radius: 8px;
+    border-left: 4px solid #48bb78;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.volunteer-project-info {
+    flex: 1;
+}
+
+.volunteer-project-info h3 {
+    margin: 0 0 5px 0;
+}
+
+.volunteer-project-info h3 a {
+    color: #2d3748;
+    text-decoration: none;
+}
+
+.volunteer-project-info h3 a:hover {
+    color: #4299e1;
+}
+
+.volunteer-project-info p {
+    margin: 3px 0;
+    font-size: 0.95rem;
+    color: #4a5568;
+}
+
+.volunteer-actions {
+    flex-shrink: 0;
+}
+
+.btn-sm {
+    padding: 5px 15px;
+    font-size: 0.85rem;
+}
+
 /* ===== FORM STYLES ===== */
 .organization-form {
     max-width: 600px;

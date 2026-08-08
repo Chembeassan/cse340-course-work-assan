@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { createUser, getUserByEmail, authenticateUser, getAllUsers } from '../models/users.js';
 import { body, validationResult } from 'express-validator';
+import { getUserVolunteerProjects } from '../models/volunteers.js';
 
 const saltRounds = 10;
 
@@ -26,17 +27,15 @@ const requireRole = (role) => {
             req.flash('error', 'Please log in to access this page.');
             return res.redirect('/login');
         }
-
         if (req.session.user.role_name !== role) {
             req.flash('error', 'You do not have permission to access this page.');
             return res.redirect('/');
         }
-
         next();
     };
 };
 
-// ===== REGISTRATION FUNCTIONS =====
+// ===== REGISTRATION =====
 
 /**
  * Display the user registration form
@@ -62,17 +61,14 @@ const processUserRegistrationForm = async (req, res) => {
 
     try {
         const { name, email, password } = req.body;
-
         const existingUser = await getUserByEmail(email);
         if (existingUser) {
             req.flash('error', 'Email already registered. Please use a different email.');
             req.flash('formData', req.body);
             return res.redirect('/register');
         }
-
         const passwordHash = await bcrypt.hash(password, saltRounds);
-        const userId = await createUser(name, email, passwordHash);
-
+        await createUser(name, email, passwordHash);
         req.flash('success', 'Registration successful! Please log in.');
         res.redirect('/login');
     } catch (error) {
@@ -83,7 +79,7 @@ const processUserRegistrationForm = async (req, res) => {
     }
 };
 
-// ===== LOGIN FUNCTIONS =====
+// ===== LOGIN =====
 
 /**
  * Display the login form
@@ -100,9 +96,7 @@ const showLoginForm = (req, res) => {
 const processLoginForm = async (req, res) => {
     try {
         const { email, password } = req.body;
-
         const user = await authenticateUser(email, password);
-
         if (user) {
             req.session.user = {
                 user_id: user.user_id,
@@ -111,10 +105,7 @@ const processLoginForm = async (req, res) => {
                 role_id: user.role_id,
                 role_name: user.role_name
             };
-            
             console.log('User logged in:', user.email);
-            console.log('User role:', user.role_name);
-            
             req.flash('success', `Welcome back, ${user.name}!`);
             return res.redirect('/dashboard');
         } else {
@@ -144,23 +135,32 @@ const processLogout = (req, res) => {
     });
 };
 
-// ===== DASHBOARD FUNCTION =====
+// ===== DASHBOARD =====
 
 /**
- * Display the user dashboard
+ * Display the user dashboard with volunteer projects
  */
-const showDashboard = (req, res) => {
-    const user = req.session.user;
-    const title = 'Dashboard';
-    res.render('dashboard', { 
-        title, 
-        name: user.name, 
-        email: user.email,
-        role: user.role_name
-    });
+const showDashboard = async (req, res) => {
+    try {
+        const user = req.session.user;
+        const userId = user.user_id;
+        const volunteerProjects = await getUserVolunteerProjects(userId);
+        const title = 'Dashboard';
+        res.render('dashboard', { 
+            title, 
+            name: user.name, 
+            email: user.email,
+            role: user.role_name,
+            volunteerProjects: volunteerProjects
+        });
+    } catch (error) {
+        console.error('Error loading dashboard:', error);
+        req.flash('error', 'Failed to load dashboard.');
+        res.redirect('/');
+    }
 };
 
-// ===== USERS LIST FUNCTION (NEW) =====
+// ===== USERS LIST =====
 
 /**
  * Display all users (admin only)
@@ -201,26 +201,21 @@ const userRegistrationValidation = [
     body('password')
         .notEmpty()
         .withMessage('Password is required')
-        .isLength({ min: 8 })
-        .withMessage('Password must be at least 8 characters long')
+        .isLength({ min: 6 })
+        .withMessage('Password must be at least 6 characters long')
 ];
 
 // ===== EXPORTS =====
 
 export {
-    // Registration
     showUserRegistrationForm,
     processUserRegistrationForm,
     userRegistrationValidation,
-    // Login
     showLoginForm,
     processLoginForm,
     processLogout,
-    // Middleware
     requireLogin,
     requireRole,
-    // Dashboard
     showDashboard,
-    // Users List
     showUsersPage 
 };

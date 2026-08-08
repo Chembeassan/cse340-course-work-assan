@@ -179,3 +179,23 @@ INSERT INTO users (name, email, password_hash, role_id) VALUES
     ('Admin User', 'admin@example.com', 'placeholder_hash', 2),
     ('Regular User', 'user@example.com', 'placeholder_hash', 1)
 ON CONFLICT (email) DO NOTHING;
+
+-- =============================================
+-- VOLUNTEER TABLE (Many-to-Many between users and projects)
+-- =============================================
+
+-- Drop table if exists (for clean rebuild)
+DROP TABLE IF EXISTS project_volunteers CASCADE;
+
+-- Create volunteer tracking table
+CREATE TABLE project_volunteers (
+    volunteer_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    project_id INTEGER REFERENCES project(project_id) ON DELETE CASCADE,
+    volunteered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, project_id)  -- Prevent duplicate signups
+);
+
+-- Add indexes for faster queries
+CREATE INDEX idx_volunteers_user_id ON project_volunteers(user_id);
+CREATE INDEX idx_volunteers_project_id ON project_volunteers(project_id);

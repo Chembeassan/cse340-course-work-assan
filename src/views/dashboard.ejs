@@ -28,6 +28,34 @@
                     </div>
                 </div>
                 
+                <!-- Volunteer Projects Section -->
+                <div class="dashboard-card">
+                    <h2>My Volunteer Projects</h2>
+                    <% if (volunteerProjects && volunteerProjects.length > 0) { %>
+                        <div class="volunteer-list">
+                            <% volunteerProjects.forEach(project => { %>
+                                <div class="volunteer-item">
+                                    <div class="volunteer-project-info">
+                                        <h3><a href="/project/<%= project.project_id %>"><%= project.title %></a></h3>
+                                        <p><strong>Organization:</strong> <%= project.organization_name %></p>
+                                        <p><strong>Location:</strong> <%= project.location %></p>
+                                        <p><strong>Date:</strong> <%= new Date(project.project_date).toLocaleDateString() %></p>
+                                        <p><small>Signed up: <%= new Date(project.volunteered_at).toLocaleDateString() %></small></p>
+                                    </div>
+                                    <div class="volunteer-actions">
+                                        <form action="/project/<%= project.project_id %>/unvolunteer" method="POST">
+                                            <button type="submit" class="btn btn-danger btn-sm">Remove Me</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p>You haven't signed up for any projects yet.</p>
+                        <p><a href="/projects">Browse projects to volunteer for →</a></p>
+                    <% } %>
+                </div>
+                
                 <!-- Admin-only actions -->
                 <% if (role === 'admin') { %>
                     <div class="dashboard-card admin-actions">
@@ -36,18 +64,6 @@
                             <a href="/users" class="action-card">
                                 <span class="action-icon">👥</span>
                                 <span class="action-label">Manage Users</span>
-                            </a>
-                            <a href="/organizations" class="action-card">
-                                <span class="action-icon">🏢</span>
-                                <span class="action-label">View Organizations</span>
-                            </a>
-                            <a href="/projects" class="action-card">
-                                <span class="action-icon">📋</span>
-                                <span class="action-label">View Projects</span>
-                            </a>
-                            <a href="/categories" class="action-card">
-                                <span class="action-icon">🏷️</span>
-                                <span class="action-label">View Categories</span>
                             </a>
                             <a href="/new-organization" class="action-card">
                                 <span class="action-icon">➕</span>
@@ -64,24 +80,6 @@
                         </div>
                     </div>
                 <% } %>
-                
-                <div class="dashboard-actions">
-                    <h3>Quick Actions</h3>
-                    <div class="action-grid">
-                        <a href="/organizations" class="action-card">
-                            <span class="action-icon">🏢</span>
-                            <span class="action-label">View Organizations</span>
-                        </a>
-                        <a href="/projects" class="action-card">
-                            <span class="action-icon">📋</span>
-                            <span class="action-label">View Projects</span>
-                        </a>
-                        <a href="/categories" class="action-card">
-                            <span class="action-icon">🏷️</span>
-                            <span class="action-label">View Categories</span>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </main>
